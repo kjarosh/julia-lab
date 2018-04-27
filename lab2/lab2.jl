@@ -54,9 +54,13 @@ function convert{N}(::Type{G{N}}, v::Int64)
     return G{N}(v)
 end
 
+function convert{N}(::Type{Int64}, v::G{N})
+    return v.x
+end
+
 # Promocja
 
-promote_rule(::Type{G{N}}, ::Type{T}) where {T <: Integer, N} = G{N}
+promote_rule(::Type{G{N}}, ::Type{T}) where {T <: Integer, N} = T
 
 # Potegowanie
 
@@ -66,10 +70,6 @@ function ^{N}(a::G{N}, b::Integer)
        ret = ret * a
     end
     return ret
-end
-
-function ^{N,K}(a::G{N}, b::G{K})
-    return a ^ b.x
 end
 
 # Okres
@@ -92,8 +92,6 @@ function inverse{N}(a::G{N})
             if a * i == 1
                 return G{N}(i)
             end
-        catch
-            continue
         end
     end
     
@@ -109,8 +107,6 @@ function card{N}(::Type{G{N}})
         try
             G{N}(i)
             count += 1
-        catch
-            continue
         end
     end
     
